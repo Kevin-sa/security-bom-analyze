@@ -1,0 +1,30 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+nebula:
+  host: 192.168.199.234
+  port: 9669
+  username: root
+  password: nebula
+
+kafka:
+  topic:
+    maven: security_sca_pom
+    jar-maven: security_sca_jar_pom
+  group:
+    maven:
+      graph: security_sca_pom_graph
+      detect: security_sca_pom_detect
+
+
+snowFlake:
+  datacenterId: 1
+  machineId: 2
+
+logging:
+  level:
+    com.kevinsa: debug
+
+server:
+  port: 8000
+
