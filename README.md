@@ -36,14 +36,14 @@ cd security-bom-analyze-maven-plugin
 mvn install clear
 ```
 
-## 架构
+## architecture
 ### service
 ![](docs/service.png)
-### nebula 结构
+### nebula sql
 - graph/maven.sql
 
 ![](docs/graph.png)
 
-## 结果图
+## achievement
 可以看到哪些jar包依赖junit.junit\animal-sniffer-annotations\jsr305
 ![](docs/result.png)
