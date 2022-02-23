@@ -1,64 +1,49 @@
 package com.kevinsa.security.bom.analyze.service.common.impl;
 
-import com.kevinsa.security.bom.analyze.runner.task.JarPomParserTask;
-import com.kevinsa.security.bom.analyze.service.common.MavenCommonService;
-import com.kevinsa.security.bom.analyze.utils.FileCommonUtils;
-import com.kevinsa.security.bom.analyze.utils.ObjectMapperUtils;
-import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
-import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.ReaderFactory;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import static com.kevinsa.security.bom.analyze.constant.ApplicationConstants.MAVEN_POM_FILE;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kevinsa.security.bom.analyze.service.common.MavenCommonService;
+import com.kevinsa.security.bom.analyze.utils.FileCommonUtils;
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
 
 @Service
 public class MavenCommonServiceImpl implements MavenCommonService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MavenCommonServiceImpl.class);
-
     @Autowired
     private FileCommonUtils fileCommonUtils;
 
-    @Autowired
-    private KafkaCommonServiceImpl kafkaCommonService;
-
-    @Autowired
-    private JarPomParserTask jarPomParserTask;
-
-    @Value("${kafka.topic.jar-maven}")
-    private String TOPIC;
-
+    private static final String POMTYPE = ".pom";
 
     /**
      * 获取制定路径下的pom文件相关信息
      * todo:是否需要返回三元组project的groupId、artifactId、version,需要缓存<properties></properties>中的信息
      * todo:怎么处理多个模块之间的关系
      *
-     * @param baseDir
      * @throws Exception
      */
     @Override
-    public Model getPomInfo(String baseDir, String type) throws Exception {
+    public Model getPomInfo(File filePath) throws Exception {
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         Model model;
         try {
-            Reader reader = ReaderFactory.newXmlReader(new File(baseDir, type));
+            Reader reader = ReaderFactory.newXmlReader(filePath);
             model = pomReader.read(reader);
         } catch (IOException | XmlPullParserException e) {
             throw new Exception(e);
@@ -79,7 +64,7 @@ public class MavenCommonServiceImpl implements MavenCommonService {
      */
     @Override
     public JarMavenVO getJarMvnInfoByPom(File file, String fileName, List<ArtifactVO> dependencyList) throws Exception {
-        Model model = getPomInfo(fileCommonUtils.getBasePath(file, fileName), fileName);
+        Model model = getPomInfo(file);
 
         ArtifactVO parent = null;
         if (model.getParent() != null) {
@@ -121,7 +106,7 @@ public class MavenCommonServiceImpl implements MavenCommonService {
             model.getDependencyManagement().getDependencies().forEach(consumer);
         }
 
-        if (!fileName.endsWith(".pom")) {
+        if (fileName.equals(MAVEN_POM_FILE)) {
             List<ArtifactVO> dependencies = new ArrayList<>();
             model.getDependencies().forEach(tmp -> {
                 dependencies.add(ArtifactVO.builder()
@@ -149,7 +134,7 @@ public class MavenCommonServiceImpl implements MavenCommonService {
             return;
         }
         for (File inner : Objects.requireNonNull(mvnPathFile.listFiles())) {
-            if (inner.getName().endsWith(".pom")) {
+            if (inner.getName().endsWith(POMTYPE)) {
                 // 走pom解析流程
                 getJarMvnInfoByPom(new File(inner.getPath()), inner.getName(), dependencyList);
             }

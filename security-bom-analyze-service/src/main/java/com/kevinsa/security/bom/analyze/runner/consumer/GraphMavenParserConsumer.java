@@ -36,7 +36,7 @@ public class GraphMavenParserConsumer {
      *
      * @param message
      */
-//    @KafkaListener(topics = "${kafka.topic.maven}", groupId = "${kafka.group.maven.graph}")
+    @KafkaListener(topics = "${kafka.topic.maven}", groupId = "${kafka.group.maven.graph}")
     public void consume(@Payload String message) {
         try {
             if (StringUtils.isBlank(message)) {
