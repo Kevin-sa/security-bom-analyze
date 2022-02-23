@@ -1,19 +1,6 @@
 package com.kevinsa.security.bom.analyze.service.common.impl;
 
 import static com.kevinsa.security.bom.analyze.constant.ApplicationConstants.MAVEN_POM_FILE;
-import com.kevinsa.security.bom.analyze.service.common.MavenCommonService;
-import com.kevinsa.security.bom.analyze.utils.FileCommonUtils;
-import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
-import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.ReaderFactory;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +10,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kevinsa.security.bom.analyze.service.common.MavenCommonService;
+import com.kevinsa.security.bom.analyze.utils.FileCommonUtils;
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
+
 @Service
 public class MavenCommonServiceImpl implements MavenCommonService {
-
-    private static final Logger logger = LoggerFactory.getLogger(MavenCommonServiceImpl.class);
 
     @Autowired
     private FileCommonUtils fileCommonUtils;

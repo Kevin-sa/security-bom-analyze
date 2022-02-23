@@ -45,5 +45,7 @@ mvn install clear
 ![](docs/graph.png)
 
 ## achievement
-可以看到哪些jar包依赖junit.junit\animal-sniffer-annotations\jsr305
+查看jar包依赖junit.junit\animal-sniffer-annotations\jsr305
 ![](docs/result.png)
+查看Git对应的依赖
+![](docs/git_result.png)
