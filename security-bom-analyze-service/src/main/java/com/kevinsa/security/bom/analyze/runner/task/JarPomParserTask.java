@@ -2,19 +2,8 @@ package com.kevinsa.security.bom.analyze.runner.task;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
-import com.kevinsa.security.bom.analyze.runner.consumer.GraphMavenParserConsumer;
-import com.kevinsa.security.bom.analyze.service.common.impl.KafkaCommonServiceImpl;
-import com.kevinsa.security.bom.analyze.service.common.impl.MavenCommonServiceImpl;
-import com.kevinsa.security.bom.analyze.utils.ExecUtils;
-import com.kevinsa.security.bom.analyze.utils.FileCommonUtils;
-import com.kevinsa.security.bom.analyze.utils.ObjectMapperUtils;
-import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
-import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.kevinsa.security.bom.analyze.runner.consumer.GraphMavenParserConsumer;
+import com.kevinsa.security.bom.analyze.service.common.impl.KafkaCommonServiceImpl;
+import com.kevinsa.security.bom.analyze.service.common.impl.MavenCommonServiceImpl;
 import com.kevinsa.security.bom.analyze.utils.EncryptUtils;
+import com.kevinsa.security.bom.analyze.utils.ExecUtils;
+import com.kevinsa.security.bom.analyze.utils.FileCommonUtils;
+import com.kevinsa.security.bom.analyze.utils.ObjectMapperUtils;
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
 
 
 @Component

@@ -1,8 +1,9 @@
 package com.kevinsa.security.bom.analyze.service.common;
 
+import org.apache.maven.model.Model;
+
 import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
 import com.kevinsa.security.bom.analyze.vo.mvnPlugin.JarMavenVO;
-import org.apache.maven.model.Model;
 
 import java.io.File;
 import java.util.List;
