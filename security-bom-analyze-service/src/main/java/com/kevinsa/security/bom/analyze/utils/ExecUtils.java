@@ -35,6 +35,7 @@ public class ExecUtils {
         String[] cmdArr = new String[]{"sh", "-c", cmd};
         p = Runtime.getRuntime().exec(cmdArr, null, new File(path));
         p.waitFor(5, TimeUnit.SECONDS);
+        p.destroy();
     }
 
 }

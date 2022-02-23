@@ -1,5 +1,7 @@
 package com.kevinsa.security.bom.analyze.utils;
 
+import com.kevinsa.security.bom.analyze.vo.mvnPlugin.ArtifactVO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -9,6 +11,13 @@ import java.util.Objects;
 
 @Component
 public class FileCommonUtils {
+
+    @Value("${mvn.repo}")
+    private String MVNREPO;
+
+    public String getMvnRepoPath(ArtifactVO parent) {
+        return MVNREPO + parent.getGroupId().replace(".", "/") + "/" + parent.getArtifactId() + "/" + parent.getVersion();
+    }
 
     public boolean isFileExists(String filePath) {
         File file = new File(filePath);

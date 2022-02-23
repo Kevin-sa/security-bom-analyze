@@ -1,6 +1,7 @@
 spring:
   kafka:
     bootstrap-servers: localhost:9092
+
 nebula:
   host: 192.168.199.234
   port: 9669
@@ -16,7 +17,6 @@ kafka:
       graph: security_sca_pom_graph
       detect: security_sca_pom_detect
 
-
 snowFlake:
   datacenterId: 1
   machineId: 2
@@ -27,4 +27,7 @@ logging:
 
 server:
   port: 8000
+
+mvn:
+  repo: /Users/kevinsa/.m2/repository/
 
