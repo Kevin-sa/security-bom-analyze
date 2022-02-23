@@ -11,12 +11,10 @@ import java.util.List;
 public interface MavenCommonService {
     /**
      * todo: version版本号在properties中获取的方式
-     * @param baseDir
-     * @param type
      * @return
      * @throws Exception
      */
-    Model getPomInfo(String baseDir, String type) throws Exception;
+    Model getPomInfo(File filePath) throws Exception;
 
     JarMavenVO getJarMvnInfoByPom(File file, String type, List<ArtifactVO> dependencyList) throws Exception;
 }

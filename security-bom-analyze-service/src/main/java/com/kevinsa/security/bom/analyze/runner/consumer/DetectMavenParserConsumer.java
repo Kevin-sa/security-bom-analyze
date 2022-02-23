@@ -3,6 +3,7 @@ package com.kevinsa.security.bom.analyze.runner.consumer;
 import com.kevinsa.security.bom.analyze.service.detect.impl.DetectMavenServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class DetectMavenParserConsumer {
      * 做漏洞artifact、groupId、version信息的判断
      * @param message
      */
-//    @KafkaListener(topics = "${kafka.topic.maven}", groupId = "${kafka.group.maven.detect}")
+    @KafkaListener(topics = "${kafka.topic.maven}", groupId = "${kafka.group.maven.detect}")
     public void consume(@Payload String message) {
         detectMavenService.execute(message);
     }

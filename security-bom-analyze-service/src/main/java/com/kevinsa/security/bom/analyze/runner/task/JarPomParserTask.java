@@ -1,5 +1,7 @@
 package com.kevinsa.security.bom.analyze.runner.task;
 
+import static com.kevinsa.security.bom.analyze.constant.ApplicationConstants.MAVEN_POM_FILE;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -42,9 +44,6 @@ public class JarPomParserTask {
     @Autowired
     private MavenCommonServiceImpl mavenCommonService;
 
-    private static final String TYPE = "pom.xml";
-
-
     @Value("${kafka.topic.jar-maven}")
     private String TOPIC;
 
@@ -77,7 +76,7 @@ public class JarPomParserTask {
                 String unZipCmd = getUnzipCmd(fileName, hash);
                 execUtils.exec(unZipCmd, path);
             }
-            List<File> files = fileCommonUtils.fileFind(new File("/tmp/" + hash + "/"), TYPE);
+            List<File> files = fileCommonUtils.fileFind(new File("/tmp/" + hash + "/"), MAVEN_POM_FILE);
             if (files.size() > 1) {
                 logger.info("JarPomParserTask jar:{} pom.xml file > 1", fileName);
             }
@@ -87,7 +86,7 @@ public class JarPomParserTask {
             List<ArtifactVO> dependencyList = new ArrayList<>();
             // 是否默认只去第一个
             for (File file : files) {
-                JarMavenVO jarMavenVO = mavenCommonService.getJarMvnInfoByPom(new File(fileCommonUtils.getBasePath(file, TYPE)), TYPE, dependencyList);
+                JarMavenVO jarMavenVO = mavenCommonService.getJarMvnInfoByPom(file, MAVEN_POM_FILE, dependencyList);
                 jarMavenVO.setPackageName(fileName);
                 logger.debug("send msg jar name:{}", jarMavenVO.getPackageName());
                 kafkaCommonService.sendMsg(TOPIC, ObjectMapperUtils.toJSON(jarMavenVO));
