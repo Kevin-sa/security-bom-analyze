@@ -28,6 +28,9 @@ logging:
 server:
   port: 8000
 
-mvn:
-  repo: /Users/kevinsa/.m2/repository/
+path:
+  mvn:
+    repo: /Users/kevinsa/.m2/repository/
+    tmp: /tmp
+
 
