@@ -12,7 +12,7 @@ import java.util.Objects;
 @Component
 public class FileCommonUtils {
 
-    @Value("${mvn.repo}")
+    @Value("${path.mvn.repo}")
     private String MVNREPO;
 
     public String getMvnRepoPath(ArtifactVO parent) {

@@ -49,3 +49,7 @@ mvn install clear
 ![](docs/result.png)
 查看Git对应的依赖
 ![](docs/git_result.png)
+
+## Thanks
+[SnowFlake](https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java)
+[Maven](https://maven.apache.org/plugins/index.html)

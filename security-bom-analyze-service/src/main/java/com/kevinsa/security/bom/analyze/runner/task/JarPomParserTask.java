@@ -47,8 +47,19 @@ public class JarPomParserTask {
     @Value("${kafka.topic.jar-maven}")
     private String TOPIC;
 
+    @Value("${path.mvn.tmp}")
+    private String TMP;
+
     protected String getUnzipCmd(String fileName, String fileHash) {
         return "unzip -q " + fileName + " -d /tmp/" + fileHash + "/";
+    }
+
+    protected String getTmpPath(String fileHash) {
+        return "/tmp/" + fileHash + "/";
+    }
+
+    protected String getRmCmd(String fileHash) {
+        return "rm -rf " + fileHash;
     }
 
     /**
@@ -72,11 +83,11 @@ public class JarPomParserTask {
                 return;
             }
             String hash = encryptUtils.md5Encrypt(path + fileName);
-            if (!fileCommonUtils.isFileExists("/tmp/" + hash + "/")) {
+            if (!fileCommonUtils.isFileExists(getTmpPath(hash))) {
                 String unZipCmd = getUnzipCmd(fileName, hash);
                 execUtils.exec(unZipCmd, path);
             }
-            List<File> files = fileCommonUtils.fileFind(new File("/tmp/" + hash + "/"), MAVEN_POM_FILE);
+            List<File> files = fileCommonUtils.fileFind(new File(getTmpPath(hash)), MAVEN_POM_FILE);
             if (files.size() > 1) {
                 logger.info("JarPomParserTask jar:{} pom.xml file > 1", fileName);
             }
@@ -92,7 +103,7 @@ public class JarPomParserTask {
                 kafkaCommonService.sendMsg(TOPIC, ObjectMapperUtils.toJSON(jarMavenVO));
                 break;
             }
-            execUtils.exec("rm -rf " + hash, "/tmp");
+            execUtils.exec(getRmCmd(hash), TMP);
         } catch (Exception e) {
             logger.error("execute error", e);
         }
