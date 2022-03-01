@@ -1,5 +1,8 @@
 package com.kevinsa.security.bom.analyze.service.api;
 
+import com.kevinsa.security.bom.analyze.enums.TaskStatusCode;
+import com.kevinsa.security.bom.analyze.service.common.BizCommonService;
+import com.kevinsa.security.bom.analyze.utils.EncryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,13 @@ public class TaskApiAsyncService {
     private ExecUtils execUtils;
 
     @Autowired
+    private BizCommonService bizCommonService;
+
+    @Autowired
     private JarPomParserTask jarPomParserTask;
+
+    @Autowired
+    private EncryptUtils encryptUtils;
 
     private static final String gitRemoteUrlCmd = "git remote -v |awk '{print $2}' | head -n 1";
     private static final String gitBranchCmd = "git rev-parse --abbrev-ref HEAD";
@@ -54,6 +63,14 @@ public class TaskApiAsyncService {
 
     @Async
     public void executeJarParser(String basePath, String jarName) {
-        jarPomParserTask.execute(basePath, jarName);
+        String redisKey = encryptUtils.md5Encrypt(basePath + jarName);
+        try {
+            bizCommonService.updateStatusCode(TaskStatusCode.TASK_INIT, redisKey, "executeJarParser");
+            jarPomParserTask.execute(basePath, jarName);
+            bizCommonService.updateStatusCode(TaskStatusCode.TASK_DONE, redisKey, "executeJarParser");
+        } catch (Exception e) {
+            logger.error("executeJarParser error", e);
+            bizCommonService.updateStatusCode(TaskStatusCode.TASK_ERROR, redisKey, "executeJarParser");
+        }
     }
 }

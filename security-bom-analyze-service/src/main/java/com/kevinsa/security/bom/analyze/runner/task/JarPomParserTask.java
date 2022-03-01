@@ -77,36 +77,33 @@ public class JarPomParserTask {
      * @param path
      * @param fileName
      */
-    public void execute(String path, String fileName) {
-        try {
-            if (!fileCommonUtils.isFileExists(path + fileName)) {
-                return;
-            }
-            String hash = encryptUtils.md5Encrypt(path + fileName);
-            if (!fileCommonUtils.isFileExists(getTmpPath(hash))) {
-                String unZipCmd = getUnzipCmd(fileName, hash);
-                execUtils.exec(unZipCmd, path);
-            }
-            List<File> files = fileCommonUtils.fileFind(new File(getTmpPath(hash)), MAVEN_POM_FILE);
-            if (files.size() > 1) {
-                logger.info("JarPomParserTask jar:{} pom.xml file > 1", fileName);
-            }
-            if (files.size() == 0) {
-                logger.info("JarPomParserTask jar:{} pom.xml file is 0", fileName);
-            }
-            List<ArtifactVO> dependencyList = new ArrayList<>();
-            // 是否默认只去第一个
-            for (File file : files) {
-                JarMavenVO jarMavenVO = mavenCommonService.getJarMvnInfoByPom(file, MAVEN_POM_FILE, dependencyList);
-                jarMavenVO.setPackageName(fileName);
-                logger.debug("send msg jar name:{}", jarMavenVO.getPackageName());
-                kafkaCommonService.sendMsg(TOPIC, ObjectMapperUtils.toJSON(jarMavenVO));
-                break;
-            }
-            execUtils.exec(getRmCmd(hash), TMP);
-        } catch (Exception e) {
-            logger.error("execute error", e);
+    public void execute(String path, String fileName) throws Exception {
+        // 先判断path+fileName是否存在，避免存在命令执行漏洞
+        if (!fileCommonUtils.isFileExists(path + fileName)) {
+            return;
         }
+        String hash = encryptUtils.md5Encrypt(path + fileName);
+        if (!fileCommonUtils.isFileExists(getTmpPath(hash))) {
+            String unZipCmd = getUnzipCmd(fileName, hash);
+            execUtils.exec(unZipCmd, path);
+        }
+        List<File> files = fileCommonUtils.fileFind(new File(getTmpPath(hash)), MAVEN_POM_FILE);
+        if (files.size() > 1) {
+            logger.info("JarPomParserTask jar:{} pom.xml file > 1", fileName);
+        }
+        if (files.size() == 0) {
+            logger.info("JarPomParserTask jar:{} pom.xml file is 0", fileName);
+        }
+        List<ArtifactVO> dependencyList = new ArrayList<>();
+        // 是否默认只去第一个
+        for (File file : files) {
+            JarMavenVO jarMavenVO = mavenCommonService.getJarMvnInfoByPom(file, MAVEN_POM_FILE, dependencyList);
+            jarMavenVO.setPackageName(fileName);
+            logger.debug("send msg jar name:{}", jarMavenVO.getPackageName());
+            kafkaCommonService.sendMsg(TOPIC, ObjectMapperUtils.toJSON(jarMavenVO));
+            break;
+        }
+        execUtils.exec(getRmCmd(hash), TMP);
     }
 
 }
