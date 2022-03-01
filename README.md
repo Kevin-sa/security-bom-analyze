@@ -1,4 +1,11 @@
-SECURITY-BOM_ANALYZE
+``` 
+____  _____ ____ _   _ ____  ___ _______   __    ____   ___  __  __         _    _   _    _    _  __   ____________ 
+/ ___|| ____/ ___| | | |  _ \|_ _|_   _\ \ / /   | __ ) / _ \|  \/  |       / \  | \ | |  / \  | | \ \ / /__  / ____|
+\___ \|  _|| |   | | | | |_) || |  | |  \ V /____|  _ \| | | | |\/| |_____ / _ \ |  \| | / _ \ | |  \ V /  / /|  _|  
+___) | |__| |___| |_| |  _ < | |  | |   | |_____| |_) | |_| | |  | |_____/ ___ \| |\  |/ ___ \| |___| |  / /_| |___
+|____/|_____\____|\___/|_| \_\___| |_|   |_|     |____/ \___/|_|  |_|    /_/   \_\_| \_/_/   \_\_____|_| /____|_____|
+```
+
 三方组建依赖分析，依赖于nebula graph做深度索引
 
 ## Introduction
@@ -51,5 +58,6 @@ mvn install clear
 ![](docs/git_result.png)
 
 ## Thanks
-[SnowFlake](https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java)
-[Maven](https://maven.apache.org/plugins/index.html)
+- [SnowFlake](https://github.com/beyondfengyu/SnowFlake/blob/master/SnowFlake.java)  
+- [Maven](https://maven.apache.org/plugins/index.html)
+- [Nebula Graph Database](https://docs.nebula-graph.com.cn/2.5.1/3.ngql-guide/1.nGQL-overview/1.overview/)
