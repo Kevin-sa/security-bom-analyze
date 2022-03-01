@@ -1,6 +1,6 @@
 package com.kevinsa.security.bom.analyze.runner.consumer;
 
-import com.kevinsa.security.bom.analyze.service.detect.impl.DetectMavenServiceImpl;
+import com.kevinsa.security.bom.analyze.service.consumer.DetectMavenServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;

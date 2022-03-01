@@ -1,4 +1,4 @@
-package com.kevinsa.security.bom.analyze.service.detect.impl;
+package com.kevinsa.security.bom.analyze.service.consumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import com.kevinsa.security.bom.analyze.vo.mvnPlugin.DependencyNodeVO;
 import com.kevinsa.security.bom.analyze.vo.mvnPlugin.MessageGraphVO;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
 
 /**
  * pom文件解析获取依赖后判断是否存在漏洞实现类
@@ -23,17 +24,21 @@ import lombok.extern.slf4j.Slf4j;
 public class DetectMavenServiceImpl extends ScaParseServiceUnitTemplate {
 
     private List<ArtifactVO> vulList = new ArrayList<>();
+
     @Override
     protected Object paramCheck(String message) {
         return null;
     }
 
     @Override
-    protected void beforeBusiness() {}
+    protected Object beforeBusiness(String message) {
+        Assert.notNull(message, "DetectMavenServiceImpl message is null");
+        return ObjectMapperUtils.fromJSON(message, MessageGraphVO.class);
+    }
 
     @Override
-    protected Object doBusiness(String message) {
-        MessageGraphVO request = ObjectMapperUtils.fromJSON(message, MessageGraphVO.class);
+    protected Object doBusiness(Object beforeResult) {
+        MessageGraphVO request = (MessageGraphVO) beforeResult;
         if (detectArtifact(request.getArtifactVO())) {
             vulList.add(request.getArtifactVO());
         }

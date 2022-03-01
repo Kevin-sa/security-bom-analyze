@@ -1,20 +1,20 @@
 package com.kevinsa.security.bom.analyze.service.api;
 
-import com.kevinsa.security.bom.analyze.enums.TaskStatusCode;
-import com.kevinsa.security.bom.analyze.service.common.BizCommonService;
-import com.kevinsa.security.bom.analyze.utils.EncryptUtils;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.kevinsa.security.bom.analyze.enums.TaskStatusCode;
+import com.kevinsa.security.bom.analyze.service.common.BizCommonService;
 import com.kevinsa.security.bom.analyze.runner.task.JarPomParserTask;
+import com.kevinsa.security.bom.analyze.utils.EncryptUtils;
 import com.kevinsa.security.bom.analyze.utils.ExecUtils;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Service
@@ -47,6 +47,7 @@ public class TaskApiAsyncService {
                     gitInfo.get("gitRemoteUrl"),
                     gitInfo.get("gitBranch"),
                     gitInfo.get("gitCommitId"));
+            bizCommonService.updateStatusCode(TaskStatusCode.TASK_INIT, encryptUtils.md5Encrypt(gitInfo.get("gitRemoteUrl")), "consume");
             execUtils.exec(cmd, basePath);
         } catch (Exception e) {
             logger.error("executeMvnPlugin error", e);
@@ -63,11 +64,11 @@ public class TaskApiAsyncService {
 
     @Async
     public void executeJarParser(String basePath, String jarName) {
-        String redisKey = encryptUtils.md5Encrypt(basePath + jarName);
+        String redisKey = encryptUtils.md5Encrypt(jarName);
         try {
             bizCommonService.updateStatusCode(TaskStatusCode.TASK_INIT, redisKey, "executeJarParser");
             jarPomParserTask.execute(basePath, jarName);
-            bizCommonService.updateStatusCode(TaskStatusCode.TASK_DONE, redisKey, "executeJarParser");
+            bizCommonService.updateStatusCode(TaskStatusCode.TASK_DOING, redisKey, "executeJarParser");
         } catch (Exception e) {
             logger.error("executeJarParser error", e);
             bizCommonService.updateStatusCode(TaskStatusCode.TASK_ERROR, redisKey, "executeJarParser");
