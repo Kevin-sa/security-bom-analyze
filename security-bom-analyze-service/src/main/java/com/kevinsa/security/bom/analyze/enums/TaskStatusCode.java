@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum TaskStatusCode {
     TASK_INIT(1, "task_init"),
-    TASK_DONE(2, "task_done"),
+    TASK_DOING(2, "task_doing"),
+    TASK_DONE(3, "task_done"),
     TASK_ERROR(0, "task_error");
 
     private final int code;

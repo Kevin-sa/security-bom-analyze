@@ -14,8 +14,8 @@ public abstract class ScaParseServiceUnitTemplate implements ScaParseServiceBase
     @Override
     public Object execute(String message) {
         try {
-            beforeBusiness();
-            Object businessResult = doBusiness(message);
+            Object beforeResult = beforeBusiness(message);
+            Object businessResult = doBusiness(beforeResult);
             afterBusiness(businessResult);
         } catch (Exception e) {
             logger.error("ScaParseServiceUnitTemplate error:", e);
@@ -33,12 +33,12 @@ public abstract class ScaParseServiceUnitTemplate implements ScaParseServiceBase
     /**
      * 实际执行逻辑后的扩展函数
      */
-    protected abstract void beforeBusiness();
+    protected abstract Object beforeBusiness(String message);
 
     /**
      * @return 实际执行逻辑
      */
-    protected abstract Object doBusiness(String message);
+    protected abstract Object doBusiness(Object beforeResult);
 
     /**
      * 实际执行逻辑后的扩展函数

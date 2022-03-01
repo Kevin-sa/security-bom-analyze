@@ -1,6 +1,10 @@
 spring:
   kafka:
     bootstrap-servers: localhost:9092
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
 
 nebula:
   host: 172.20.24.68
